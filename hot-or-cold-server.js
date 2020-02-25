@@ -21,17 +21,23 @@ let server = net.createServer(function(connection) {
     serverLog('RECEIVE', `Received data: ${userGuess}`);
 
     if (!Number.isInteger(userGuess)) {
+      connection.write(`sorry but ${userGuess} is not an integer :( please try again`);
       // The user entered something other than an integer
 
       // Use connection.write(...) to print out a useful error message
       // and some instructions for the user.
     } else if (userGuess < numberToGuess) {
+      connection.write("you're a bit cold. Guess a LARGER number: ");
       // The user's guess was too small.
       // Use connection.write(...) to tell them they're too cold.
     } else if (userGuess > numberToGuess) {
+      connection.write("you're too hot. Guess a SMALLER number: ");
       // The user's guess was too large.
       // Use connection.write(...) to tell them they're too hot.
     } else if (userGuess === numberToGuess) {
+      connection.write(`perfect! The correct number was ${numberToGuess}! you're connection has ended`);
+      connection.end();
+
       // The user guessed correctly!
 
       // Use connection.write(...) to tell them they guessed correctly
@@ -42,6 +48,7 @@ let server = net.createServer(function(connection) {
   // Print a log message when a client hangs up on us
   connection.on('end', function() {
     serverLog('DISCONNET', `Client ${clientAddress} disconnected`);
+    console.log(`Client ${clientAddress} disconnected`);
   });
 });
 
